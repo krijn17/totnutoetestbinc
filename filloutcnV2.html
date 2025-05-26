@@ -1,0 +1,2185 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CN Supplements – bezoeken</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+
+
+.custom-popup-overlay {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.75);
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-popup {
+  background: #1f1f1f;
+  border: 1px solid #444;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  color: #EEE;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  animation: popupFadeIn 0.3s ease-out;
+}
+
+@keyframes popupFadeIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.close-popup {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 1.5rem;
+  color: #CCC;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-popup:hover {
+  color: #FFF;
+}
+
+.custom-popup button {
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #EEE;
+  color: #111;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.custom-popup button:hover {
+  background: #FFF;
+  transform: scale(1.03);
+}
+
+
+
+/* Modal-achtergrond */
+.modal {
+  display: none; /* verborgen standaard */
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.6);
+}
+
+/* ─── Label boven het vak ─── */
+.upload-labels {
+  margin-top: 1.5rem;
+  color: #EEE;
+}
+.upload-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+.upload-instruction {
+  font-size: 0.9rem;
+  color: #AAA;
+}
+
+/* ─── Container & invisible file input ─── */
+.upload-container {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+.upload-container input[type="file"] {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* ─── Het vak zelf ─── */
+.upload-ui {
+  position: relative;
+  z-index: 1;
+  border: 2px dashed #666;
+  border-radius: 8px;
+  padding: 2rem;
+  background: #1f1f1f;
+  text-align: center;
+  transition: background 0.2s, border-color 0.2s;
+  color: #CCC;
+}
+.upload-container:hover .upload-ui {
+  border-color: #888;
+  background: #282828;
+}
+
+/* icoon & tekst */
+.upload-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.upload-text {
+  margin: 0;
+  font-size: 0.95rem;
+}
+.upload-text a {
+  color: #EEE;
+  text-decoration: underline;
+}
+.upload-text a:hover {
+  color: #FFF;
+}
+
+/* ─── Na succesvolle upload ─── */
+.upload-ui.uploaded {
+  background: #4caf50;        /* groene achtergrond */
+  border-color: #4caf50;
+  color: #FFF;
+}
+.upload-ui.uploaded .upload-icon {
+  display: none;              /* verberg het folder-icoon */
+}
+.upload-ui.uploaded .upload-text {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.upload-ui.uploaded .upload-text::before {
+  content: "Upload complete";
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* knop om ongedaan te maken */
+.upload-ui .remove-btn {
+  position: absolute;
+  top: 0.5rem; right: 0.5rem;
+  background: rgba(255,255,255,0.2);
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  line-height: 24px;
+  text-align: center;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.upload-ui .remove-btn:hover {
+  background: rgba(255,255,255,0.4);
+}
+
+/* thumbnail onderin het vak */
+.upload-ui img.preview-img {
+  display: block;
+  max-width: 100%;
+  max-height: 200px;
+  margin: 1rem auto 0;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+
+
+
+/* Modal-content */
+.modal-content {
+  background-color: #2a2a2a;
+  margin: 15% auto;
+  padding: 1.5rem;
+  border: 1px solid #444;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  color: #EEE;
+  position: relative;
+  text-align: center;
+}
+
+/* Sluit-knop */
+.close {
+  position: absolute;
+  top: 0.5rem; right: 1rem;
+  color: #CCC;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+.close:hover {
+  color: #FFF;
+}
+
+.section-divider-alt {
+  border: none;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 255, 200, 0) 0%,
+    rgba(208, 248, 5, 0.8) 50%,
+    rgba(0, 255, 200, 0) 100%
+  );
+  margin: 2.5rem 0;
+  box-shadow: 0 0 6px rgba(0, 255, 200, 0.3);
+}
+
+
+.section-divider {
+  border: none;                             /* geen default border */
+  height: 4px;                              /* lekker dik */
+  border-radius: 2px;                       /* afgeronde hoeken */
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.8) 50%,
+    rgba(255,255,255,0) 100%
+  );                                         /* lichte gradient “glans” */
+  margin: 2.5rem 0;                         /* ruimte erboven/onder */
+  box-shadow: 0 0 6px rgba(255,255,255,0.3); /* glow-effect */
+}
+
+
+
+
+
+/* ─── Strak style voor alle dropdowns ─── */
+select {
+  background: #2a2a2a;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #EEE;
+  padding: 0.6rem;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+select:focus {
+  outline: none;
+  border-color: #AAA;
+  box-shadow: 0 0 4px rgba(255,255,255,0.2);
+}
+
+/* ─── Specifiek voor multi-select ─── */
+select[multiple] {
+  height: auto;           /* past zich aan naar content/size-attribuut */
+  min-height: 6rem;       /* of wat je zelf fijn vindt */
+  line-height: 1.4;
+  overflow-y: auto;
+}
+
+/* ─── Opties helder highlighten ─── */
+select option {
+  padding: 0.4rem 0.6rem;
+  background: transparent;
+  color: #EEE;
+}
+select option:hover {
+  background: #444;
+  color: #FFF;
+}
+select option:checked {
+  background: #666;
+  color: #FFF;
+}
+
+
+
+/* ─── Custom scrollbar voor multi-select ─── */
+select[multiple]::-webkit-scrollbar {
+  width: 8px;
+}
+select[multiple]::-webkit-scrollbar-track {
+  background: #1f1f1f;
+  border-radius: 4px;
+}
+select[multiple]::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+select[multiple]::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+
+/* container + label */
+.question-group.cn-customer {
+  margin-top: 1.0rem;
+  margin-bottom: 1.5rem;             /* ondermarge weghalen */
+}
+.question-group.cn-customer .question-label {
+  display: block;
+  font-weight: 600;
+  color: #EEE;
+  margin-bottom: 0;             /* minder ruimte boven de knoppen */
+}
+/* kleiner stuk naar de volgende vraag */
+.question-group.cn-customer + label {
+  margin-top: 0.5rem;
+}
+
+/* de groep knoppen */
+.cn-options {
+  display: flex;
+  gap: 1rem;
+}
+
+/* individuele optie */
+.cn-radio {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #1f1f1f;
+  border: 2px solid #444;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.status-option {
+  padding: 0.6rem;         /* minder hoog dan 1rem */
+  font-size: 0.95rem;      /* een tikkie kleiner lettertype */
+}
+
+/* 2) Laat span full width zijn */
+.status-option span {
+  display: block;
+  width: 100%;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* 3) Outline echt rond het hele blok */
+.status-option input:checked + span {
+  outline: 2px solid #FFF;
+  outline-offset: -2px;    /* schuift de outline net in het label */
+  background: rgba(255,255,255,0.05); /* optioneel een lichte vulkleur */
+}
+
+
+
+
+/* verberg het echte radio-input */
+.cn-radio input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* het cirkeltje vóór de tekst */
+.cn-circle {
+  position: relative;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #888;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  transition: border-color 0.2s;
+}
+
+.rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;  /* schuift de reversed rij naar links */
+  gap: 0.5rem;
+  margin-bottom: 2rem;       /* een beetje ruimte onder de sterren */
+}
+
+
+/* Verberg de radios zelf */
+.rating input {
+  display: none;
+}
+
+/* Maak de labels klikbaar en style de lege ster */
+.rating label {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #444;
+  transition: color 0.2s;
+}
+
+/* Hover: alle sterren van hover en links ervan */
+.rating label:hover,
+.rating label:hover ~ label {
+  color: #666;
+}
+
+/* Checked: aangeklikte ster en alle links ervan */
+.rating input:checked + label,
+.rating input:checked + label ~ label {
+  color: #efc729;
+}
+
+
+
+/* de tekst */
+.cn-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #CCC;
+  transition: color 0.2s;
+}
+
+/* hover-effect */
+.cn-radio:hover {
+  border-color: #AAA;
+}
+
+/* wanneer geselecteerd */
+.cn-radio.active {
+  background: #908a8a;
+  border: 3px solid #FFF;       /* dikke witte outline */
+  padding: calc(0.75rem - 1px) calc(1.5rem - 1px);
+}
+.cn-radio.active .cn-circle {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #111;
+}
+.cn-radio.active .cn-circle::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 10px; height: 10px;
+  transform: translate(-50%, -50%);
+  background: #111;
+  border-radius: 50%;
+}
+.cn-radio.active .cn-text {
+  color: #111;
+}
+
+/* 1) Laat dropdowns gewoon buiten hun parent “flow” uitvouwen */
+.form-container,
+body {
+  overflow: visible !important;
+}
+
+/* 2) Forceer de multi-select en andere dropdowns bovenop */
+.ff-ui-multi-select .ff-ui-select__menu,
+.ff-ui-select .ff-ui-select__menu {
+  position: absolute !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+
+/* container voor alle previews */
+.upload-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* elk preview-vakje */
+.upload-previews .upload-ui {
+  padding: 0.5rem;
+}
+
+/* de afbeelding zelf */
+.upload-previews .upload-ui img {
+  max-width: 120px;    /* pas dit getal aan naar wens */
+  max-height: 80px;    /* en/of deze */
+  width: auto;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto;      /* centreer in het vakje */
+}
+
+
+
+/* Begin CSS */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #111;
+  color: #EEE;
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: 2rem;
+  overflow: auto;
+}
+.form-container {
+  background: #1f1f1f;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 720px;
+  margin: 0 auto;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  border: 1px solid #333;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.header .title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #FFF;
+}
+.header .subtitle {
+  font-size: 0.95rem;
+  color: #CCC;
+  margin-top: 0.25rem;
+}
+.header img {
+  height: 45px;
+}
+label {
+  display: block;
+  margin-top: 1.25rem;
+  font-weight: 500;
+  color: #EEE;
+}
+input[readonly], select[disabled] {
+  background: #333;
+  color: #CCC;
+  cursor: not-allowed;
+}
+input, select, textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #EEE;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input::placeholder, textarea::placeholder { color: #777; }
+input:focus:not([readonly]), select:focus:not([disabled]), textarea:focus {
+  outline: none;
+  border-color: #AAA;
+  box-shadow: 0 0 4px rgba(255,255,255,0.2);
+}
+.row { display: flex; gap: 1rem; }
+.row > * { flex: 1; }
+fieldset {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px dashed #444;
+  border-radius: 12px;
+  background: #2a2a2a;
+  color: #EEE;
+}
+legend {
+  font-weight: 600;
+  padding: 0 0.5rem;
+}
+.result-view {
+  display: none;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+}
+.result-view p {
+  margin: 0.5rem 0;
+  color: #EEE;
+}
+.result-view strong {
+  display: inline-block;
+  width: 120px;
+}
+button {
+  display: block;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111;
+  background: #EEE;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+button:hover {
+  background: #FFF;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+button:active {
+  background: #DDD;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+
+/* 1) 4 kolommen in één rij */
+.status-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+/* 2) Verberg de native checkbox volledig */
+.status-option input[type="checkbox"] {
+  position: absolute !important;
+  width: 0; height: 0;
+  margin: 0; padding: 0;
+  border: none;
+  clip: rect(0,0,0,0);
+  opacity: 0;
+}
+
+/* 3) Basis-styling voor elk blok */
+.status-option {
+  position: relative;
+  padding: 1rem;
+  border: 2px solid #444;
+  border-radius: 8px;
+  background: #1f1f1f;
+  color: #EEE;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+/* 4) Hover-state */
+.status-option:hover {
+  border-color: #888;
+}
+
+/* 5) Aangevinkt = dikke witte outline om het hele blok */
+.status-option.active {
+  border-color: #FFF;
+  /* optioneel: iets lichter achtergrondje */
+  background: rgba(255,255,255,0.05);
+}
+
+/* 6) Text binnenin blijft gewoon centraal */
+.status-option span {
+  display: block;
+  line-height: 1.4;
+}
+
+/* overschrijf inner outline */
+.status-option input[type="checkbox"] + span {
+  outline: none !important;
+  background: transparent !important;
+}
+
+#cnProducts {
+  background: #1f1f1f;
+  border: 2px solid #666;
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #EEE;
+  font-size: 0.95rem;
+  min-height: 10rem;
+  overflow-y: auto;
+  line-height: 1.5;
+}
+
+#cnProducts option {
+  padding: 0.5rem;
+  background: #2a2a2a;
+  color: #EEE;
+}
+
+#cnProducts option:hover {
+  background: #444;
+  color: #FFF;
+}
+
+#cnProducts option:checked {
+  background: #666;
+  color: #FFF;
+  font-weight: 600;
+}
+.product-options {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.product-option {
+  position: relative;
+  padding: 0.75rem;
+  border: 2px solid #444;
+  border-radius: 8px;
+  background: #1f1f1f;
+  color: #EEE;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.product-option:hover {
+  border-color: #888;
+}
+
+.product-option input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.product-option input[type="checkbox"]:checked + span,
+.product-option input[type="checkbox"]:checked ~ span {
+  font-weight: 600;
+  color: #FFF;
+}
+
+.product-option.active {
+  border-color: #FFF;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.product-options {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 800px) {
+  .product-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+  </style>
+</head>
+<body>
+<!-- Choices.js CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
+
+<!-- Custom Modal -->
+<div id="statusModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <p id="modalMessage">Bericht</p>
+    </div>
+  </div>
+  
+  <div class="form-container">
+    <div class="header">
+      <div>
+        <div class="title">CN Supplements – bezoeken</div>
+        <div class="subtitle">Hier kan je jouw bezoek-data voor CN invullen.</div>
+      </div>
+      <img src="https://raw.githubusercontent.com/krijn17/Logobinc/refs/heads/main/BINC%20LOGO%20FULL%20WHITE(ingesneden).png"
+           alt="BINC logo" />
+    </div>
+
+    <form id="myForm">
+      <label>
+        Naam vertegenwoordiger *
+        <select name="repName" required>
+          <option value="">– kies –</option>
+          <option>Martijn Hoeks</option>
+          <option>Maurice Besselink</option>
+          <option>Thomas Boskamp</option>
+          <option>Tim Van Helvoort</option>
+          <option>Dyanco Hordijk</option>
+          <option>Daan De Waal</option>
+          <option>Laurens Eggersman</option>
+          <option>Jorrit Zwaanswijk</option>
+          <option>Merlijn Stieger</option>
+          <option>Gidi De Kort</option>
+          <option>Maud Moolenschot</option>
+        </select>
+      </label>
+
+      <label>
+        Filiaal ID – in spreadsheet te vinden *<br>
+        <input id="idInput" type="number" name="id" min="1" max="9999" required placeholder="Vul hier de ID in">
+      </label>
+
+      <div id="lookupResult" class="result-view">
+        <p><strong>Filiaalnaam:</strong> <span id="resNaam">—</span></p>
+        <p><strong>Straat &amp; huisnr.:</strong> <span id="resAdres">—</span></p>
+        <p><strong>Postcode:</strong> <span id="resPc">—</span></p>
+        <p><strong>Plaats:</strong> <span id="resPlaats">—</span></p>
+      </div>
+
+      <label>
+        Weeknummer *<br>
+        <input type="number" name="weekNumber" readonly>
+      </label>
+
+      <label>
+        Naam filiaal *<br>
+        <input type="text" name="branchName" id="branchName" readonly required>
+      </label>
+
+      <fieldset>
+        <legend>Adresgegevens</legend>
+        <label>
+          Straat & huisnr. *<br>
+          <input type="text" name="address" id="address" readonly required>
+        </label>
+        <div class="row">
+          <label>
+            Plaats *<br>
+            <input type="text" name="city" id="city" readonly required>
+          </label>
+          <label>
+            Provincie<br>
+            <input type="text" name="state">
+          </label>
+          <label>
+            Postcode *<br>
+            <input type="text" name="zip" id="zip" readonly required>
+          </label>
+        </div>
+      </fieldset>
+
+      <hr class="section-divider" />
+
+
+      <label>
+        Naam contactpersoon *<br>
+        <input type="text" name="contactName" required>
+      </label>
+
+
+
+      <label>
+        Functie *<br>
+        <select name="role" required>
+          <option value="">– kies –</option>
+          <option>Eigenaar/ondernemer</option>
+          <option>Filiaalmanager</option>
+          <option>Bedrijfsleider</option>
+          <option>DKW manager</option>
+          <option>Vulploegleider</option>
+          <option>Medewerker</option>
+        </select>
+      </label>
+
+      <label>
+        E-mail<br>
+        <input type="email" name="email" id="emailInput" placeholder="Optioneel">
+      </label>
+
+      <label id="emailReasonLabel">
+        Reden voor ontbreken e-mail<br>
+        <textarea name="emailReason" rows="2" placeholder="Indien van toepassing"></textarea>
+      </label>
+
+      <div class="question-group cn-customer">
+        <label class="question-label">Is het een CN-klant? *</label>
+        <div class="cn-options">
+          <label class="cn-radio">
+            <input type="radio" name="cnCustomer" value="Ja" required>
+            <span class="cn-circle"></span>
+            <span class="cn-text">Ja</span>
+          </label>
+          <label class="cn-radio">
+            <input type="radio" name="cnCustomer" value="Nee">
+            <span class="cn-circle"></span>
+            <span class="cn-text">Nee</span>
+          </label>
+        </div>
+      </div>
+
+      <div id="pastCnContainer" class="question-group cn-customer" style="display: none;">
+        <label class="question-label">Hebben ze in het verleden CN gevoerd? *</label>
+        <div class="cn-options">
+          <label class="cn-radio">
+            <input type="radio" name="pastCn" value="Ja" required>
+            <span class="cn-circle"></span>
+            <span class="cn-text">Ja</span>
+          </label>
+          <label class="cn-radio">
+            <input type="radio" name="pastCn" value="Nee">
+            <span class="cn-circle"></span>
+            <span class="cn-text">Nee</span>
+          </label>
+        </div>
+      </div>
+      
+<!-- ▽ Alleen bij “Is het een CN-klant?” = Ja ▽ -->
+<div id="cnStockContainer" class="question-group cn-customer" style="display: none;">
+    <label class="question-label">
+      Hebben ze momenteel voldoende voorraad van onze producten? *
+    </label>
+    <div class="cn-options">
+      <label class="cn-radio">
+        <input type="radio" name="stockSufficient" value="Ja" required>
+        <span class="cn-circle"></span>
+        <span class="cn-text">Ja</span>
+      </label>
+      <label class="cn-radio">
+        <input type="radio" name="stockSufficient" value="Nee">
+        <span class="cn-circle"></span>
+        <span class="cn-text">Nee</span>
+      </label>
+    </div>
+  </div>
+  <!-- △ Einde cnStockContainer △ -->
+  
+
+        <!-- ▽ Alleen bij “Is het een CN-klant?” = Ja ▽ -->
+  <div id="cnCustomerExtra" class="question-group" style="display: none;">
+    <label>
+      Hoe verloopt het huidige bestelproces met ons? Wat kan er beter? *<br>
+      <textarea name="orderProcessFeedback" rows="2" required></textarea>
+    </label>
+    <label>
+      Hebben ze last van langzame levering of out-of-stock situaties? *<br>
+      <textarea name="stockIssues" rows="2" required></textarea>
+    </label>
+  </div>
+
+  <div id="cnProductRange" class="question-group" style="display: none;">
+    <label class="question-label">Welke producten worden er gevoerd? *</label>
+    <div class="product-options" id="cnProducts">
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Xtreme Workout V2" />
+        <span>Xtreme Workout V2</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="De Beuker Xtreme Workout V3" />
+        <span>De Beuker Xtreme Workout V3</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Pomp Apparaat" />
+        <span>Pomp Apparaat</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="De Beuker V4" />
+        <span>De Beuker V4</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Creatine" />
+        <span>Creatine</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Electrolyte Scoops" />
+        <span>Electrolyte Scoops</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Whey Protein" />
+        <span>Whey Protein</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Golden proteïne bars" />
+        <span>Golden proteïne bars</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Protein Pancakes" />
+        <span>Protein Pancakes</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Groei-Lekker Bulkpot" />
+        <span>Groei-Lekker Bulkpot</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Iced Groei Koffie" />
+        <span>Iced Groei Koffie</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Shakebekers" />
+        <span>Shakebekers</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Pump" />
+        <span>Pump</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Magnesium" />
+        <span>Magnesium</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Vitamix Pro" />
+        <span>Vitamix Pro</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Omega 3" />
+        <span>Omega 3</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Mega Multi" />
+        <span>Mega Multi</span>
+      </label>
+      <label class="product-option">
+        <input type="checkbox" name="cnProducts" value="Geen" />
+        <span>Geen</span>
+      </label>
+    </div>
+  </div>
+  
+
+
+  <hr class="section-divider" />
+
+  
+
+      <label>
+      Zijn er specifieke merken of producten waar klanten vaak naar vragen?   *<br>
+        <textarea name="popularBrands" rows="2" required></textarea>
+      </label>
+
+      <label>
+        Voeren ze andere supplementen-merken? *<br>
+        <select name="otherBrands" required>
+          <option value="">– kies –</option>
+          <option>Ja</option>
+          <option>Nee</option>
+        </select>
+      </label>
+
+      <!-- ▽ otherBrandsContainer – ALLE vragen voor otherBrands = Ja ▽ -->
+      <div id="otherBrandsGeneral" class="question-group" style="display: none;">
+    <label>
+      Hoeveel meter aan sportsupplementen/voeding heeft de locatie? *<br>
+      <select name="shelfLength">
+        <option value="">– kies –</option>
+        <option>Enkel onze display</option>
+        <option>4 planken (halve meter)</option>
+        <option>1 meter</option>
+        <option>2 meter</option>
+        <option>3 meter</option>
+        <option>4 meter</option>
+        <option>5 meter</option>
+        <option>Geen</option>
+      </select>
+    </label>
+  
+    <label>
+      Welke supplementen lopen momenteel het beste in de winkel? *<br>
+      <select name="bestSellingSupplements">
+        <option value="">– kies –</option>
+        <option>ESN</option>
+        <option>XXL Nutrition</option>
+        <option>Upfront</option>
+        <option>MB Nutrition</option>
+        <option>Body&amp;Fit</option>
+        <option>MyProtein</option>
+        <option>Kosso Nutrition</option>
+        <option>Clean Nutrition</option>
+      </select>
+    </label>
+      
+  
+    <label>
+      Welke producten verkopen minder goed dan verwacht? *<br>
+      <textarea name="poorSellingProducts" rows="2"></textarea>
+    </label>
+  
+    <div class="question-group">
+        <label class="question-label">Welke merken zijn er zichtbaar? *</label>
+        <div class="status-options" id="visibleBrandsGroup">
+          <label class="status-option">
+            <input type="checkbox" name="visibleBrands" value="ESN" />
+            <span>ESN</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visibleBrands" value="XXL Nutrition" />
+            <span>XXL Nutrition</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visibleBrands" value="Upfront" />
+            <span>Upfront</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visibleBrands" value="MB Nutrition" />
+            <span>MB Nutrition</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visibleBrands" value="Body&Fit" />
+            <span>Body&Fit</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visibleBrands" value="MyProtein" />
+            <span>MyProtein</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visibleBrands" value="Kosso Nutrition" />
+            <span>Kosso Nutrition</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visibleBrands" value="Clean Nutrition" />
+            <span>Clean Nutrition</span>
+          </label>
+        </div>
+      </div>
+      
+      <div id="ESNFollowup" class="question-group" style="display: none;">
+        <hr class="section-divider-alt" />
+        <label>
+          Welke ESN producten zijn er zichtbaar? *<br>
+          <div class="status-options">
+            <label class="status-option">
+              <input type="checkbox" name="ESNProducts" value="Whey Protein" />
+              <span>Whey Protein</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="ESNProducts" value="Proteine Repen" />
+              <span>Proteïne Repen</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="ESNProducts" value="Creatine" />
+              <span>Creatine</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="ESNProducts" value="Electrolytes" />
+              <span>Electrolytes</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="ESNProducts" value="Andere" />
+              <span>Andere</span>
+            </label>
+          </div>
+        </label>
+      </div>
+      
+      <div id="ESNBarsQuestion" class="question-group" style="display: none;">
+        <label>
+          Doorloop proteïne repen ESN:<br>
+          <input type="text" name="esnBars" placeholder="Afgelopen maand" />
+        </label>
+      </div>
+      
+      <div id="ESNOtherQuestion" class="question-group" style="display: none;">
+        <label>
+          Welke andere ESN producten zijn zichtbaar?<br>
+          <input type="text" name="esnOtherProducts" />
+        </label>
+      </div>
+      
+
+      <div id="XXLNutritionFollowup" class="question-group" style="display: none;">
+        <hr class="section-divider-alt" />
+        <label>
+          Welke XXL Nutrition producten zijn er zichtbaar? *<br>
+          <div class="status-options">
+            <label class="status-option">
+              <input type="checkbox" name="XXLNutritionProducts" value="Whey Protein" />
+              <span>Whey Protein</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="XXLNutritionProducts" value="Proteine Repen" />
+              <span>Proteïne Repen</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="XXLNutritionProducts" value="Creatine" />
+              <span>Creatine</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="XXLNutritionProducts" value="Electrolytes" />
+              <span>Electrolytes</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="XXLNutritionProducts" value="Andere" />
+              <span>Andere</span>
+            </label>
+          </div>
+        </label>
+      </div>
+      
+      <div id="XXLNutritionBarsQuestion" class="question-group" style="display: none;">
+        <label>
+          Doorloop proteïne repen XXL Nutrition:<br>
+          <input type="text" name="xxlBars" placeholder="Afgelopen maand" />
+        </label>
+      </div>
+      
+      <div id="XXLNutritionOtherQuestion" class="question-group" style="display: none;">
+        <label>
+          Welke andere XXL Nutrition producten zijn zichtbaar?<br>
+          <input type="text" name="xxlOtherProducts" />
+        </label>
+      </div>
+      
+
+      <div id="UpfrontFollowup" class="question-group" style="display: none;">
+        <hr class="section-divider-alt" />
+        <label>
+          Welke Upfront producten zijn er zichtbaar? *<br>
+          <div class="status-options">
+            <label class="status-option">
+              <input type="checkbox" name="UpfrontProducts" value="Whey Protein" />
+              <span>Whey Protein</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="UpfrontProducts" value="Proteine Repen" />
+              <span>Proteïne Repen</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="UpfrontProducts" value="Creatine" />
+              <span>Creatine</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="UpfrontProducts" value="Electrolytes" />
+              <span>Electrolytes</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="UpfrontProducts" value="Andere" />
+              <span>Andere</span>
+            </label>
+          </div>
+        </label>
+      </div>
+      <div id="UpfrontBarsQuestion" class="question-group" style="display: none;">
+        <label>
+          Doorloop proteïne repen Upfront:<br>
+          <input type="text" name="UpfrontBars" placeholder="Bijv. Afgelopen maand" />
+        </label>
+      </div>
+      <div id="UpfrontOtherQuestion" class="question-group" style="display: none;">
+        <label>
+          Welke andere Upfront producten zijn zichtbaar?<br>
+          <input type="text" name="UpfrontOtherProducts" />
+        </label>
+      </div>
+      
+      <div id="MBNutritionFollowup" class="question-group" style="display: none;">
+        <hr class="section-divider-alt" />
+        <label>
+          Welke MB Nutrition producten zijn er zichtbaar? *<br>
+          <div class="status-options">
+            <label class="status-option">
+              <input type="checkbox" name="MBNutritionProducts" value="Whey Protein" />
+              <span>Whey Protein</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="MBNutritionProducts" value="Proteine Repen" />
+              <span>Proteïne Repen</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="MBNutritionProducts" value="Creatine" />
+              <span>Creatine</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="MBNutritionProducts" value="Electrolytes" />
+              <span>Electrolytes</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="MBNutritionProducts" value="Andere" />
+              <span>Andere</span>
+            </label>
+          </div>
+        </label>
+      </div>
+      <div id="MBNutritionBarsQuestion" class="question-group" style="display: none;">
+        <label>
+          Doorloop proteïne repen MB Nutrition:<br>
+          <input type="text" name="MBNutritionBars" placeholder="Bijv. Afgelopen maand" />
+        </label>
+      </div>
+      <div id="MBNutritionOtherQuestion" class="question-group" style="display: none;">
+        <label>
+          Welke andere MB Nutrition producten zijn zichtbaar?<br>
+          <input type="text" name="MBNutritionOtherProducts" />
+        </label>
+      </div>
+
+      <div id="BodyFitFollowup" class="question-group" style="display: none;">
+        <hr class="section-divider-alt" />
+        <label>
+          Welke Body&Fit producten zijn er zichtbaar? *<br>
+          <div class="status-options">
+            <label class="status-option">
+              <input type="checkbox" name="BodyFitProducts" value="Whey Protein" />
+              <span>Whey Protein</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="BodyFitProducts" value="Proteine Repen" />
+              <span>Proteïne Repen</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="BodyFitProducts" value="Creatine" />
+              <span>Creatine</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="BodyFitProducts" value="Electrolytes" />
+              <span>Electrolytes</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="BodyFitProducts" value="Andere" />
+              <span>Andere</span>
+            </label>
+          </div>
+        </label>
+      </div>
+      <div id="BodyFitBarsQuestion" class="question-group" style="display: none;">
+        <label>
+          Doorloop proteïne repen Body&Fit:<br>
+          <input type="text" name="BodyFitBars" placeholder="Bijv. Afgelopen maand" />
+        </label>
+      </div>
+      <div id="BodyFitOtherQuestion" class="question-group" style="display: none;">
+        <label>
+          Welke andere Body&Fit producten zijn zichtbaar?<br>
+          <input type="text" name="BodyFitOtherProducts" />
+        </label>
+      </div>
+      
+      <div id="MyProteinFollowup" class="question-group" style="display: none;">
+        <hr class="section-divider-alt" />
+        <label>
+          Welke MyProtein producten zijn er zichtbaar? *<br>
+          <div class="status-options">
+            <label class="status-option">
+              <input type="checkbox" name="MyProteinProducts" value="Whey Protein" />
+              <span>Whey Protein</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="MyProteinProducts" value="Proteine Repen" />
+              <span>Proteïne Repen</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="MyProteinProducts" value="Creatine" />
+              <span>Creatine</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="MyProteinProducts" value="Electrolytes" />
+              <span>Electrolytes</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="MyProteinProducts" value="Andere" />
+              <span>Andere</span>
+            </label>
+          </div>
+        </label>
+      </div>
+      <div id="MyProteinBarsQuestion" class="question-group" style="display: none;">
+        <label>
+          Doorloop proteïne repen MyProtein:<br>
+          <input type="text" name="MyProteinBars" placeholder="Bijv. Afgelopen maand" />
+        </label>
+      </div>
+      <div id="MyProteinOtherQuestion" class="question-group" style="display: none;">
+        <label>
+          Welke andere MyProtein producten zijn zichtbaar?<br>
+          <input type="text" name="MyProteinOtherProducts" />
+        </label>
+      </div>
+
+      <div id="KossoNutritionFollowup" class="question-group" style="display: none;">
+        <hr class="section-divider-alt" />
+        <label>
+          Welke Kosso Nutrition producten zijn er zichtbaar? *<br>
+          <div class="status-options">
+            <label class="status-option">
+              <input type="checkbox" name="KossoNutritionProducts" value="Whey Protein" />
+              <span>Whey Protein</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="KossoNutritionProducts" value="Proteine Repen" />
+              <span>Proteïne Repen</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="KossoNutritionProducts" value="Creatine" />
+              <span>Creatine</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="KossoNutritionProducts" value="Electrolytes" />
+              <span>Electrolytes</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="KossoNutritionProducts" value="Andere" />
+              <span>Andere</span>
+            </label>
+          </div>
+        </label>
+      </div>
+      <div id="KossoNutritionBarsQuestion" class="question-group" style="display: none;">
+        <label>
+          Doorloop proteïne repen Kosso Nutrition:<br>
+          <input type="text" name="KossoNutritionBars" placeholder="Bijv. Afgelopen maand" />
+        </label>
+      </div>
+      <div id="KossoNutritionOtherQuestion" class="question-group" style="display: none;">
+        <label>
+          Welke andere Kosso Nutrition producten zijn zichtbaar?<br>
+          <input type="text" name="KossoNutritionOtherProducts" />
+        </label>
+      </div>
+
+      <div id="CleanNutritionFollowup" class="question-group" style="display: none;">
+        <hr class="section-divider-alt" />
+
+        <label>
+            Welke Clean Nutrition producten zijn er zichtbaar? *<br>
+          <div class="status-options">
+            <label class="status-option">
+              <input type="checkbox" name="CleanNutritionProducts" value="Whey Protein" />
+              <span>Whey Protein</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="CleanNutritionProducts" value="Proteine Repen" />
+              <span>Proteïne Repen</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="CleanNutritionProducts" value="Creatine" />
+              <span>Creatine</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="CleanNutritionProducts" value="Electrolytes" />
+              <span>Electrolytes</span>
+            </label>
+            <label class="status-option">
+              <input type="checkbox" name="CleanNutritionProducts" value="Andere" />
+              <span>Andere</span>
+            </label>
+          </div>
+        </label>
+      </div>
+      <div id="CleanNutritionBarsQuestion" class="question-group" style="display: none;">
+        <label>
+          Doorloop proteïne repen Clean Nutrition:<br>
+          <input type="text" name="CleanNutritionBars" placeholder="Bijv. Afgelopen maand" />
+        </label>
+      </div>
+      <div id="CleanNutritionOtherQuestion" class="question-group" style="display: none;">
+        <label>
+          Welke andere Clean Nutrition producten zijn zichtbaar?<br>
+          <input type="text" name="CleanNutritionOtherProducts" />
+        </label>
+      </div>
+
+
+      <hr class="section-divider" />
+
+      <label>
+        Interesse in nieuwe producten/productlijnen of niche supplementen? *<br>
+        <textarea name="newInterest" rows="2" required></textarea>
+      </label>
+
+      <label>
+        Hoe bepaal je welke producten je opneemt of laat vallen? *<br>
+        <textarea name="productSelection" rows="2" required></textarea>
+      </label>
+      
+  
+    <label>
+      Welke marketingactiviteiten voer je uit rondom supplementen? *<br>
+      <textarea name="marketingActivities" rows="2"></textarea>
+    </label>
+  
+    <label>
+      Zijn er momenten of seizoenen waarin supplementen extra goed lopen? *<br>
+      <textarea name="seasonalTrends" rows="2"></textarea>
+    </label>
+  
+    <label>
+      Wat vindt jouw doelgroep belangrijk bij het kiezen van een merk? *<br>
+      <textarea name="targetGroupPreferences" rows="2"></textarea>
+    </label>
+  </div>
+  <!-- △ einde otherBrandsContainer △ -->
+  
+      
+  <div id="otherBrandsGeneral" class="question-group" style="display: none;">
+        <label>
+          Hoeveel meter aan sportsupplementen/voeding heeft de locatie? *<br>
+          <select name="shelfLength">
+            <option value="">– kies –</option>
+            <option>Enkel onze display</option>
+            <option>4 planken (halve meter)</option>
+            <option>1 meter</option>
+            <option>2 meter</option>
+            <option>3 meter</option>
+            <option>4 meter</option>
+            <option>5 meter</option>
+            <option>Geen</option>
+          </select>
+        </label>
+      
+        <label>
+          Welke supplementen lopen momenteel het beste in de winkel? *<br>
+          <select name="bestSellingSupplements">
+            <option value="">– kies –</option>
+            <option>ESN</option>
+            <option>XXL Nutrition</option>
+            <option>Upfront</option>
+            <option>MB Nutrition</option>
+            <option>Body&amp;Fit</option>
+            <option>MyProtein</option>
+            <option>Kosso Nutrition</option>
+            <option>Clean Nutrition</option>
+          </select>
+        </label>
+      
+        <label>
+          Welke producten verkopen minder goed dan verwacht? *<br>
+          <textarea name="poorSellingProducts" rows="2"></textarea>
+        </label>
+      
+        <label>
+          Welke merken zijn er zichtbaar? *<br>
+          <select name="visibleBrands">
+            <option value="">– kies –</option>
+            <option>ESN</option>
+            <option>XXL Nutrition</option>
+            <option>Upfront</option>
+            <option>MB Nutrition</option>
+            <option>Body&amp;Fit</option>
+            <option>MyProtein</option>
+            <option>Kosso Nutrition</option>
+            <option>Clean Nutrition</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- ▽ Alleen bij “Voeren ze andere supplementen-merken?” = Ja ▽ -->
+<div id="otherBrandsContainer" class="question-group" style="display: none;">
+    <label>
+      Welke marketingactiviteiten voer je uit rondom supplementen? *<br>
+      <textarea name="marketingActivities" rows="2"></textarea>
+    </label>
+    <label>
+      Zijn er momenten of seizoenen waarin supplementen extra goed lopen? *<br>
+      <textarea name="seasonalTrends" rows="2"></textarea>
+    </label>
+    <label>
+      Wat vindt jouw doelgroep belangrijk bij het kiezen van een merk? *<br>
+      <textarea name="targetGroupPreferences" rows="2"></textarea>
+    </label>
+  </div>
+  <!-- △ Einde otherBrands-container △ -->
+
+<!-- ▽ Alleen bij “Voeren ze andere supplementen-merken?” = Ja ▽ -->
+<div id="otherBrandsContainer" class="question-group" style="display: none;">
+    <label>
+      Welke marketingactiviteiten voer je uit rondom supplementen? *<br>
+      <textarea name="marketingActivities" rows="2"></textarea>
+    </label>
+    <label>
+      Zijn er momenten of seizoenen waarin supplementen extra goed lopen? *<br>
+      <textarea name="seasonalTrends" rows="2"></textarea>
+    </label>
+    <label>
+      Wat vindt jouw doelgroep belangrijk bij het kiezen van een merk? *<br>
+      <textarea name="targetGroupPreferences" rows="2"></textarea>
+    </label>
+  </div>
+  <!-- △ Einde otherBrands-container △ -->
+  
+  <!-- ▽ Alleen bij “Is het een CN-klant?” = Ja ▽ -->
+<div id="serviceContainer" class="question-group" style="display: none;">
+    <label>
+      Wat kunnen wij verbeteren in onze ondersteuning of service? *<br>
+      <textarea name="serviceImprovements" rows="2"></textarea>
+    </label>
+  </div>
+  <!-- △ Einde service-container △ -->
+
+
+  
+  
+<div class="question-group">
+    <hr class="section-divider" />
+  <p class="question-label">Hoe goed is de relatie met de locatie? *</p>
+  <div class="rating">
+    <input type="radio" id="star5" name="relationRating" value="5" required>
+    <label for="star5" title="5 sterren">★</label>
+
+    <input type="radio" id="star4" name="relationRating" value="4">
+    <label for="star4" title="4 sterren">★</label>
+
+    <input type="radio" id="star3" name="relationRating" value="3">
+    <label for="star3" title="3 sterren">★</label>
+
+    <input type="radio" id="star2" name="relationRating" value="2">
+    <label for="star2" title="2 sterren">★</label>
+
+    <input type="radio" id="star1" name="relationRating" value="1">
+    <label for="star1" title="1 ster">★</label>
+  </div>
+</div>
+
+  
+  
+
+<!-- Verkoopplek-labels -->
+<div class="upload-labels">
+    <p class="upload-title">Verkoopplek:</p>
+    <p class="upload-instruction">
+      Maak een foto van de manier waarop onze producten worden gepresenteerd.
+    </p>
+  </div>
+  
+  <!-- Upload-vak -->
+  <label class="upload-container">
+    <input type="file" name="salesLocation" accept="image/*" />
+    <div class="upload-ui" id="uploadUI">
+      <span class="upload-icon">📁</span>
+      <p class="upload-text">Drag &amp; drop a file or <a href="#">browse</a></p>
+    </div>
+  </label>
+  
+
+      <label>
+        Extra informatie: *<br>
+        <textarea name="extraInfo" rows="3" required></textarea>
+      </label>
+
+      <div class="question-group">
+        <p class="question-label">Status bezoek: *</p>
+        <div class="status-options">
+          <label class="status-option">
+            <input type="checkbox" name="visitStatus" value="Afgerond bezoek">
+            <span>Afgerond bezoek</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visitStatus" value="Bijbesteld">
+            <span>Bijbesteld</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visitStatus" value="Niemand aanwezig">
+            <span>Niemand aanwezig</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visitStatus" value="Opvolging (actie vereist)">
+            <span>Opvolging<br>(actie vereist)</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visitStatus" value="Vervolgafspraak maken">
+            <span>Vervolgafspraak maken</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visitStatus" value="Niet meer bezoeken">
+            <span>Niet meer bezoeken</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visitStatus" value="Te vroeg bezocht">
+            <span>Te vroeg bezocht</span>
+          </label>
+          <label class="status-option">
+            <input type="checkbox" name="visitStatus" value="Niet bezocht">
+            <span>Niet bezocht</span>
+          </label>
+        </div>
+      </div>
+      
+      
+
+      <button type="submit">Verstuur</button>
+    </form>
+  </div>
+
+  <script>
+// Zorg dat dit buiten de DOMContentLoaded staat:
+function toggleCnCustomerQuestions() {
+  const isCn = document.querySelector('input[name="cnCustomer"]:checked')?.value === 'Ja';
+
+  serviceContainer.style.display = isCn ? 'block' : 'none';
+  cnExtra.style.display = isCn ? 'block' : 'none';
+
+  const cnProductRange = document.getElementById('cnProductRange');
+  const cnProductSelect = document.getElementById('cnProducts');
+  cnProductRange.style.display = isCn ? 'block' : 'none';
+
+  if (cnProductSelect) {
+    cnProductSelect.required = isCn;
+    if (!isCn) {
+      [...cnProductSelect.options].forEach(opt => opt.selected = false);
+    }
+  }
+
+  serviceInputs.concat(extraInputs).forEach(f => {
+    f.required = isCn;
+    if (!isCn) f.value = '';
+  });
+}
+
+
+    const serviceContainer = document.getElementById('serviceContainer');
+const cnExtra = document.getElementById('cnCustomerExtra');
+const extraInputs = Array.from(cnExtra.querySelectorAll('textarea'));
+const serviceInputs = Array.from(serviceContainer.querySelectorAll('textarea'));
+
+
+function showCustomPopup(message) {
+  const popup = document.getElementById('customPopup');
+  const msg = document.getElementById('customPopupMessage');
+  msg.textContent = message;
+  popup.style.display = 'flex';
+}
+
+function closeCustomPopup() {
+  document.getElementById('customPopup').style.display = 'none';
+}
+
+
+    // 1) Modal helper
+    function showModal(message) {
+      const modal = document.getElementById('statusModal');
+      const msgEl = document.getElementById('modalMessage');
+      msgEl.textContent = message;
+      modal.style.display = 'block';
+    }
+    document.getElementById('closeModal').addEventListener('click', () => {
+      document.getElementById('statusModal').style.display = 'none';
+    });
+    window.addEventListener('click', e => {
+      if (e.target.id === 'statusModal') {
+        document.getElementById('statusModal').style.display = 'none';
+      }
+    });
+  
+    // 2) ISO-weeknummer helper
+    function getWeekNumber(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      const dayNum = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    }
+  
+    // 3) Custom-radio helper
+    function setupCustomRadios(groupName) {
+      const inputs = Array.from(document.querySelectorAll(`input[name="${groupName}"]`));
+      const radios = inputs.map(i => i.closest('.cn-radio'));
+      radios.forEach((radio, idx) => {
+        const input = inputs[idx];
+        if (input.checked) radio.classList.add('active');
+        radio.addEventListener('click', () => {
+          radios.forEach(r => r.classList.remove('active'));
+          radio.classList.add('active');
+          input.checked = true;
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+      });
+    }
+  
+    // 3b) Toggle voor voorraad-vraag
+    function toggleStockQuestion() {
+      const isCn = document.querySelector('input[name="cnCustomer"]:checked')?.value === 'Ja';
+      const container = document.getElementById('cnStockContainer');
+      container.style.display = isCn ? 'block' : 'none';
+      document.querySelectorAll('input[name="stockSufficient"]').forEach(i => {
+        i.required = isCn;
+        if (!isCn) {
+          i.checked = false;
+          i.closest('.cn-radio')?.classList.remove('active');
+        }
+      });
+    }
+   
+    document.querySelectorAll('input[name="cnCustomer"]').forEach(r =>
+  r.addEventListener('change', () => {
+    toggleStockQuestion();
+    toggleCnCustomerQuestions();  // <- deze regel is essentieel
+  })
+);
+
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // A) Weeknummer invullen
+      const weekInput = document.querySelector('input[name="weekNumber"]');
+      if (weekInput) weekInput.value = getWeekNumber(new Date());
+  
+      // B) Custom radios opzetten
+      setupCustomRadios('cnCustomer');
+      setupCustomRadios('pastCn');
+      setupCustomRadios('stockSufficient');
+  
+      // C) Toggle “Hebben ze in het verleden CN gevoerd?”
+      const pastCnContainer = document.getElementById('pastCnContainer');
+      const pastCnInputs    = Array.from(pastCnContainer.querySelectorAll('input[name="pastCn"]'));
+      function togglePastCn() {
+        const val = document.querySelector('input[name="cnCustomer"]:checked')?.value;
+        if (val === 'Nee') {
+          pastCnContainer.style.display = 'block';
+          pastCnInputs.forEach(r => r.required = true);
+        } else {
+          pastCnContainer.style.display = 'none';
+          pastCnInputs.forEach(r => {
+            r.required = false;
+            r.checked  = false;
+            r.closest('.cn-radio')?.classList.remove('active');
+          });
+        }
+      }
+      document.querySelectorAll('input[name="cnCustomer"]').forEach(i =>
+        i.addEventListener('change', togglePastCn)
+      );
+      togglePastCn();
+  
+      // D) Toggle “Voeren ze andere supplementen-merken?”
+      const otherBrandsSelect = document.querySelector('select[name="otherBrands"]');
+      const otherContainer = document.getElementById('otherBrandsGeneral');
+      const otherFields       = Array.from(otherContainer.querySelectorAll('select, textarea'));
+      function toggleOtherBrands() {
+        if (otherBrandsSelect.value === 'Ja') {
+          otherContainer.style.display = 'block';
+          otherFields.forEach(f => f.required = true);
+        } else {
+          otherContainer.style.display = 'none';
+          otherFields.forEach(f => {
+            f.required = false;
+            if (f.tagName === 'SELECT') f.selectedIndex = 0;
+            else if (f.tagName === 'TEXTAREA') f.value = '';
+          });
+        }
+      }
+      otherBrandsSelect.addEventListener('change', toggleOtherBrands);
+      toggleOtherBrands();
+  
+      function toggleCnCustomerQuestions() {
+  const isCn = document.querySelector('input[name="cnCustomer"]:checked')?.value === 'Ja';
+
+  serviceContainer.style.display = isCn ? 'block' : 'none';
+  cnExtra.style.display          = isCn ? 'block' : 'none';
+  
+  const cnProductRange = document.getElementById('cnProductRange');
+  const cnProductSelect = document.getElementById('cnProducts');
+  cnProductRange.style.display = isCn ? 'block' : 'none';
+
+  if (cnProductSelect) {
+    cnProductSelect.required = isCn;
+    if (!isCn) {
+      [...cnProductSelect.options].forEach(opt => opt.selected = false);
+    }
+  }
+
+  serviceInputs.concat(extraInputs).forEach(f => {
+    f.required = isCn;
+    if (!isCn) f.value = '';
+  });
+}
+
+  
+      // F) E-mail reden toggle
+      const emailInput  = document.getElementById('emailInput');
+      const reasonLabel = document.getElementById('emailReasonLabel');
+      emailInput.addEventListener('input', () => {
+        reasonLabel.style.display = emailInput.value.trim() ? 'none' : 'block';
+      });
+  
+      // G) Sheets inladen + parsen (PUBHTML)
+      const SHEETS = [
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vQd5l-abTTXYY_T4d2iJoLewaNseO_2UH6OoiCiCEWfjP_3T6cbUVd4WQp6QjnS_aoCRfwqgEZRchsv/pubhtml?gid=51926634&single=true',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vQd5l-abTTXYY_T4d2iJoLewaNseO_2UH6OoiCiCEWfjP_3T6cbUVd4WQp6QjnS_aoCRfwqgEZRchsv/pubhtml?gid=629687264&single=true',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vQd5l-abTTXYY_T4d2iJoLewaNseO_2UH6OoiCiCEWfjP_3T6cbUVd4WQp6QjnS_aoCRfwqgEZRchsv/pubhtml?gid=0&single=true',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vQd5l-abTTXYY_T4d2iJoLewaNseO_2UH6OoiCiCEWfjP_3T6cbUVd4WQp6QjnS_aoCRfwqgEZRchsv/pubhtml?gid=1984994851&single=true',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vQd5l-abTTXYY_T4d2iJoLewaNseO_2UH6OoiCiCEWfjP_3T6cbUVd4WQp6QjnS_aoCRfwqgEZRchsv/pubhtml?gid=1867508359&single=true',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vQd5l-abTTXYY_T4d2iJoLewaNseO_2UH6OoiCiCEWfjP_3T6cbUVd4WQp6QjnS_aoCRfwqgEZRchsv/pubhtml?gid=1028454158&single=true',
+        'https://docs.google.com/spreadsheets/d/e/2PACX-1vQd5l-abTTXYY_T4d2iJoLewaNseO_2UH6OoiCiCEWfjP_3T6cbUVd4WQp6QjnS_aoCRfwqgEZRchsv/pubhtml?gid=1608034829&single=true'
+      ];
+      const lookupMap = new Map();
+      Promise.all(
+        SHEETS.map(url =>
+          fetch(url)
+            .then(res => res.text())
+            .then(txt => {
+              const doc = new DOMParser().parseFromString(txt, 'text/html');
+              doc.querySelectorAll('.waffle tbody tr').forEach((tr, i) => {
+                if (i === 0) return; // header
+                const cells = tr.querySelectorAll('td');
+                const id = cells[0]?.textContent.trim();
+                if (!id) return;
+                lookupMap.set(id, {
+                  naam:   cells[1]?.textContent.trim() || '',
+                  adres:  cells[2]?.textContent.trim() || '',
+                  pc:     cells[3]?.textContent.trim() || '',
+                  plaats: cells[4]?.textContent.trim() || ''
+                });
+              });
+            })
+        )
+      ).catch(e => console.error('Kon sheets niet laden', e));
+  
+      // H) Lookup + velden invullen
+      const idInput    = document.getElementById('idInput');
+      const resDiv     = document.getElementById('lookupResult');
+      const resNaam    = document.getElementById('resNaam');
+      const resAdres   = document.getElementById('resAdres');
+      const resPc      = document.getElementById('resPc');
+      const resPlaats  = document.getElementById('resPlaats');
+      const branchName = document.getElementById('branchName');
+      const address    = document.getElementById('address');
+      const city       = document.getElementById('city');
+      const zip        = document.getElementById('zip');
+      idInput.addEventListener('input', () => {
+        const rec = lookupMap.get(idInput.value.trim());
+        if (rec) {
+          resNaam.textContent   = rec.naam;
+          resAdres.textContent  = rec.adres;
+          resPc.textContent     = rec.pc;
+          resPlaats.textContent = rec.plaats;
+          branchName.value      = rec.naam;
+          address.value         = rec.adres;
+          city.value            = rec.plaats;
+          zip.value             = rec.pc;
+          resDiv.style.display  = 'block';
+        } else {
+          resDiv.style.display = 'none';
+          [branchName, address, city, zip].forEach(el => el.value = '');
+        }
+      });
+  
+      // I) Upload-UI (ongewijzigd)
+      const uploadContainer = document.querySelector('.upload-container');
+      const fileInput       = uploadContainer.querySelector('input[type="file"]');
+      const previewList     = document.createElement('div');
+      previewList.className = 'upload-previews';
+      uploadContainer.parentNode.insertBefore(previewList, uploadContainer.nextSibling);
+      fileInput.addEventListener('change', e => {
+        Array.from(e.target.files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = ev => {
+            const ui = document.createElement('div');
+            ui.className = 'upload-ui uploaded';
+            const fn = document.createElement('div');
+            fn.className = 'upload-text';
+            fn.textContent = file.name;
+            ui.appendChild(fn);
+            const img = document.createElement('img');
+            img.src = ev.target.result;
+            img.alt = file.name;
+            img.style.maxWidth = '100%';
+            img.style.marginTop = '0.5rem';
+            ui.appendChild(img);
+            const removeBtn = document.createElement('span');
+            removeBtn.className = 'remove-btn';
+            removeBtn.textContent = '×';
+            removeBtn.addEventListener('click', () => previewList.removeChild(ui));
+            ui.appendChild(removeBtn);
+            previewList.appendChild(ui);
+          };
+          reader.readAsDataURL(file);
+        });
+        fileInput.value = '';
+      });
+  
+      // J) Form submit + API-logic (ongewijzigd)
+      const FORM_ID = 'osDpjvMX4Rus';
+      const API_KEY = 'sk_prod_0wYtaCFCJsihgYzUbZChgxKf…';
+      const QIDS = {
+        repName: '3cqB',     id: '1kWg',   branchName: '3bLW', weekNumber: 'jYkq',
+        address: 'mGqY',     contactName: 'sZjR', role: 'scGt',  email: 'ngZc',
+        emailReason: 'svGi', cnCustomer: 'hZ6S', pastCn: 'mhLn', popularBrands: '5uMF',
+        otherBrands: 'rdYT', newInterest: 'd2J2', productSelection: 'aFZj', extraInfo: 'd6HV',
+        visitStatus: 'syPH', stockSufficient: 'ABCD', orderProcessFeedback: 'EFGH',
+        stockIssues: 'IJKL', visibleBrands: 'MNOP', salesLocation: 'mjCH'
+      };
+  
+      function toBase64(file) {
+        return new Promise((res, rej) => {
+          const reader = new FileReader();
+          reader.onload  = () => res(reader.result);
+          reader.onerror = rej;
+          reader.readAsDataURL(file);
+        });
+      }
+  
+      document.getElementById('myForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const f = e.target;
+        const visitStatuses = Array.from(
+          document.querySelectorAll('input[name="visitStatus"]:checked')
+        ).map(cb => cb.value).join(', ');
+  
+        const ans = {
+          [QIDS.repName]:          f.repName.value,
+          [QIDS.id]:               f.id.value,
+          [QIDS.branchName]:       f.branchName.value,
+          [QIDS.weekNumber]:       f.weekNumber.value,
+          [QIDS.address]:          f.address.value,
+          [QIDS.contactName]:      f.contactName.value,
+          [QIDS.role]:             f.role.value,
+          [QIDS.email]:            f.email.value,
+          [QIDS.emailReason]:      f.emailReason.value,
+          [QIDS.cnCustomer]:       f.cnCustomer.value,
+          [QIDS.pastCn]:           f.pastCn.value,
+          [QIDS.popularBrands]:    f.popularBrands.value,
+          [QIDS.otherBrands]:      f.otherBrands.value,
+          [QIDS.visitStatus]:      visitStatuses,
+          [QIDS.newInterest]:      f.newInterest.value,
+          [QIDS.productSelection]: f.productSelection.value,
+          [QIDS.extraInfo]:        f.extraInfo.value,
+          [QIDS.stockSufficient]:  (document.querySelector('input[name="stockSufficient"]:checked')?.value || ''),
+          [QIDS.orderProcessFeedback]: f.orderProcessFeedback.value,
+          [QIDS.stockIssues]:      f.stockIssues.value,
+          [QIDS.visibleBrands]: Array.from(document.querySelectorAll('input[name="visibleBrands"]:checked')).map(cb => cb.value).join(', ')
+        };
+  
+        const submissions = Object.entries(ans).map(([id, value]) => ({ id, value }));
+        // salesLocation base64
+        const previews = previewList.querySelectorAll('img');
+        if (previews.length) submissions.push({ id: QIDS.salesLocation, value: previews[0].src });
+  
+        try {
+          const res = await fetch(`https://api.fillout.com/v1/api/forms/${FORM_ID}/submissions`, {
+            method:  'POST',
+            headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ submissions:[{ questions: submissions }] })
+          });
+          if (!res.ok) throw new Error((await res.json()).message || res.statusText);
+          showCustomPopup('Bedankt! Je antwoorden zijn opgeslagen.');
+          f.reset();
+          previewList.innerHTML = '';
+        } catch (err) {
+          console.error(err);
+          alert('Er is een fout opgetreden: ' + err.message);
+        }
+      });
+  
+      // K) Toggle styling voor status-checkboxen
+      document.querySelectorAll('.status-option').forEach(label => {
+        label.addEventListener('click', () => {
+          const cb = label.querySelector('input[type="checkbox"]');
+          cb.checked = !cb.checked;
+          label.classList.toggle('active', cb.checked);
+        });
+      });
+
+
+
+// Voeg event listeners toe aan alle productcheckboxes
+const productCheckboxes = document.querySelectorAll('[id$="Products"]');
+productCheckboxes.forEach(cb => {
+  cb.addEventListener('change', toggleSubQuestions);
+});
+
+
+function toggleBrandFollowup(brand) {
+  const safeName = brand.replace(/\s|&/g, ''); // bijv. "XXL Nutrition" => "XXLNutrition"
+  const followupEl = document.getElementById(`${safeName}Followup`);
+  const barsEl     = document.getElementById(`${safeName}BarsQuestion`);
+  const otherEl    = document.getElementById(`${safeName}OtherQuestion`);
+  const productEls = document.querySelectorAll(`input[name="${safeName}Products"]`);
+
+
+    const isSelected = document.querySelector(`input[name="visibleBrands"][value="${brand}"]`)?.closest('.status-option')?.classList.contains('active');
+
+
+  if (followupEl) followupEl.style.display = isSelected ? 'block' : 'none';
+
+  if (!isSelected) {
+    if (barsEl)  barsEl.style.display = 'none';
+    if (otherEl) otherEl.style.display = 'none';
+    productEls.forEach(cb => cb.checked = false);
+  }
+}
+
+
+
+function toggleBrandSubQuestions(brand) {
+  const safeName = brand.replace(/\s|&/g, '');
+  const selected = Array.from(document.querySelectorAll(`input[name="${safeName}Products"]:checked`)).map(cb => cb.value);
+  const barsEl   = document.getElementById(`${safeName}BarsQuestion`);
+  const otherEl  = document.getElementById(`${safeName}OtherQuestion`);
+
+  if (barsEl)  barsEl.style.display = selected.includes('Proteine Repen') ? 'block' : 'none';
+  if (otherEl) otherEl.style.display = selected.includes('Andere') ? 'block' : 'none';
+}
+
+const allBrands = [
+  'ESN', 'XXL Nutrition',
+  'Upfront', 'MB Nutrition',
+  'Body&Fit', 'MyProtein', 'Kosso Nutrition', 'Clean Nutrition'
+];
+
+
+// Toggle voor follow-up vragen als merk is aangeklikt
+function toggleBrandFollowup(brand) {
+  const safeName = brand.replace(/\s|&/g, '');
+  const isActive = document.querySelector(`input[name="visibleBrands"][value="${brand}"]`)?.closest('.status-option')?.classList.contains('active');
+  const followup = document.getElementById(`${safeName}Followup`);
+  const bars = document.getElementById(`${safeName}BarsQuestion`);
+  const other = document.getElementById(`${safeName}OtherQuestion`);
+
+  if (followup) followup.style.display = isActive ? 'block' : 'none';
+  if (!isActive) {
+    if (bars) bars.style.display = 'none';
+    if (other) other.style.display = 'none';
+  }
+}
+
+// Toggle voor subvragen ("Proteïne Repen" en "Andere")
+function toggleBrandSubQuestions(brand) {
+  const safeName = brand.replace(/\s|&/g, '');
+  const selectedValues = Array.from(document.querySelectorAll(`input[name="${safeName}Products"]:checked`)).map(cb => cb.value);
+  const bars = document.getElementById(`${safeName}BarsQuestion`);
+  const other = document.getElementById(`${safeName}OtherQuestion`);
+
+  if (bars)  bars.style.display = selectedValues.includes('Proteine Repen') ? 'block' : 'none';
+  if (other) other.style.display = selectedValues.includes('Andere') ? 'block' : 'none';
+}
+
+// Voeg event listeners toe aan zichtbare merken + subvragen
+allBrands.forEach(brand => {
+  const selector = `input[name="visibleBrands"][value="${brand}"]`;
+  document.querySelectorAll(selector).forEach(cb => {
+    cb.addEventListener('change', () => toggleBrandFollowup(brand));
+  });
+
+  const safeName = brand.replace(/\s|&/g, '');
+  document.querySelectorAll(`input[name="${safeName}Products"]`).forEach(cb => {
+    cb.addEventListener('change', () => toggleBrandSubQuestions(brand));
+  });
+});
+
+
+    function toggleSubQuestions() {
+  brands.forEach(brand => toggleBrandSubQuestions(brand));
+}
+
+  });
+
+document.querySelectorAll('input[name="cnCustomer"]').forEach(i =>
+  i.addEventListener('change', () => {
+    toggleStockQuestion();
+    toggleCnCustomerQuestions();
+  })
+);
+
+// En roep ‘m eenmalig aan voor de initiële toestand
+toggleCnCustomerQuestions();
+
+
+document.querySelectorAll('#cnProducts .product-option').forEach(option => {
+  const checkbox = option.querySelector('input[type="checkbox"]');
+  option.addEventListener('click', e => {
+    e.preventDefault(); // voorkom onbedoeld dubbel gedrag
+    checkbox.checked = !checkbox.checked;
+    option.classList.toggle('active', checkbox.checked);
+  });
+});
+
+
+
+  
+// einde DOMContentLoaded
+    
+  </script>
+  <div class="custom-popup-overlay" id="customPopup">
+    <div class="custom-popup">
+      <span class="close-popup" onclick="closeCustomPopup()">×</span>
+      <p id="customPopupMessage">Je gegevens zijn succesvol verzonden.</p>
+      <button onclick="closeCustomPopup()">OK</button>
+    </div>
+  </div>
+  
+
+</body>
+</html>
